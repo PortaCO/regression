@@ -1,5 +1,5 @@
 ---
-title: "Presentacion"
+title: "Análisis de Factores influyentes en el componente Energético (kcal) en los platos peruanos en el 2017"
 format: html
 editor: visual
 ---
@@ -468,8 +468,33 @@ modelo_mejor_cp <- lm(ENERC ~ WATER + PROCNT + FAT + CHOCDF + ASH + CARTBQ + VIT
 
 # Resumen del modelo
 summary(modelo_mejor_cp)
-
 ```
+
+```{r}
+anova_resultado <- anova(modelo_mejor_cp)
+print(anova_resultado)
+```
+
+```{r}
+# Gráficos de diagnóstico (residuos, homocedasticidad, normalidad, etc.)
+#par(mfrow = c(2, 2))
+#plot(modelo_mejor_cp)
+
+#Valores ajustados
+valores_ajustados <- fitted(mode_mejor_cp)
+
+# Residuos estandarizados
+residuos_estandarizados <- rstandard(modelo_mejor_cp)
+
+# Graficar residuos estandarizados
+plot(valores_ajustados, residuos_estandarizados, 
+     main = "Residuos estandarizados vs Valores ajustados",
+     xlab = "Valores ajustados", 
+     ylab = "Residuos estandarizados",
+     col = "#FA8072",pch=19)
+abline(h = 0, col = "red", lty = 2)
+```
+
 
 
 
