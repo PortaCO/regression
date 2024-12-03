@@ -1,0 +1,651 @@
+---
+title: "Presentacion"
+format: pdf
+toc: true
+toc-depth: 4
+number-sections: true
+editor: visual
+---
+
+\newpage
+
+# Introduccion
+
+## Formulacion del Problema de Investigacion
+
+¿Cuáles son los componentes nutricionales que influyen significativamente en el contenido energético (kcal) de las preparaciones alimenticias y cómo se relacionan entre sí en los platos peruanos en el 2017?
+
+# Marco Teorico
+
+## Antecedentes
+
+En 1950, siendo el Dr. Carlos Collazos Chiriboga jefe del Instituto Nacional de Nutrición, se establece convenio entre el Ministerio de Salud de Perú y el Servicio Cooperativo Interamericano de Salud Pública de los EE.UU., con la finalidad de fortalecer a los Institutos de Salud, dentro de los que se encontraba el Instituto Nacional de Nutrición, orientando sus actividades a la investigación; es así que durante su gestión, se realizan encuestas para evaluar la situación nutricional del país y analizar los alimentos que la población ingería, mediante análisis de sus componentes, que culminan con la publicación de la Tabla Peruana de Composición de Alimentos, en la revista Anales de la Facultad de Medicina de la Universidad Nacional Mayor de San Marcos en 1952, dicha tabla fue elaborada con muestras de alimentos obtenidos en las regiones del país donde se ejecutaron las encuestas dietéticas.
+
+La elaboración de estas Tablas representa un trabajo analítico de la Institución, sostenido por más de sesenta años. Desde su primera publicación se han incorporado nuevos alimentos y las cifras anteriormente publicadas han sido sometidas a cuidadosa comprobación, puesto que entre las principales funciones del Centro Nacional de Alimentación y Nutrición (CENAN) se encuentra la investigación y el ofrecer herramientas para el estudio del estado nutricional de los habitantes del país.
+
+Como producto del trabajo realizado, en octubre del 2009, el Instituto Nacional de Salud (INS) a través del CENAN, publicó la octava edición de las Tablas Peruanas de Composición de Alimentos, que actualiza parte de la información de los alimentos en relación a las versiones anteriores e incorpora datos de nutrientes importantes como zinc y fibra dietaria, así como de nuevos alimentos. Asimismo, el proceso de actualización de las Tablas Peruanas de Composición de Alimentos, está enfocado a evaluar el contenido de macro y micronutrientes de los alimentos de las diferentes zonas del país, dado que los datos existentes datan de ediciones anteriores y de otras tablas internacionales.
+
+La presente actualización considera información sobre energía y 19 nutrientes de 928 alimentos consumidos en el Perú, distribuidos en 14 grupos. Pero, también se está incorporando el grupo de preparados, con información de 942 preparaciones; en este caso, los datos de composición varían respecto a los demás, pues solo se informa lo que fue analizado para la encuesta de alimentos consumidos fuera del hogar, a cargo del INEI. Todos los datos referidos proceden de análisis químicos, propios o imputados, o son estimados por cálculo de acuerdo con las normas de compilación, para garantizar su confiabilidad.
+
+# Objetivos
+
+## Objetivo general
+
+Analizar el componente energético de los platos peruanos en base a sus múltiples composiciones.
+
+## Objetivo Especifico
+
+1.  Indentificar cuales factores o componentes alimenticios influyen mas en el valor energetico-kcal (variable dependiente) proporcionada por el alimento.
+2.  Identificar si la cantidad de agua presente en los alimentos esta relacionada negativamente con el valor energetico, es decir, si alimentos con mayor contenido de agua tienden a tene menos calorias.
+3.  Evaluar como la categoria de alimentos influye en el valor energetico.
+
+# Metodologia
+
+## Formulación del Modelo de Regresión Lineal Múltiple
+
+Se plantea un modelo de regresion lineal multiple para analizar la relacion entre el contenido energetico (ENERC) de las preparaciones peruanos y demás contenidos alimenticios. Este modelo permite explorar como diferentes variables independientes afectan de manera conjunta la variable dependiente, proporcionando una compresion entre los factores evaluados.
+
+$$
+Y = \beta_0 + \beta_1 X_1 + \beta_2 X_2 + \cdots + \beta_{20} X_{20} + \varepsilon
+$$ donde:
+
+-   Y: Variable dependiente cuantitativa continua, representa por el contenido energetico (ENERC) de las preparaciones peruanas.
+-   $X_1,X_2,\ldots,X_{19}$: Variables independientes cuantitativa continuas, representada por agua, proteinas, grasas totales, calcio, y demás componentes.
+-   $X_{20}$: Variable indendiente cualitatita representada por la categoria de preparaciones (Categoria)
+-   $\beta_0,\beta_1,\ldots,\beta_{20}$: Coeficientes parametrales
+-   $\varepsilon$: Error aleatorio
+
+El planteamiento de este modelo se fundamenta en la necesidad de analizar las diferencias en el aporte energetico segun las caracteristicas especificas de las prepaciones peruanas. Ademas este planteamiento permitira no solo identificar los factores que influyen en el contenido energetico, sino tambien estimar su magnitud.
+
+Ademas, el modelo asume los siguientes supuestos basicos:
+
+1.  **Linealidad**: existe una relación lineal entre las variables independientes y la variable dependiente.
+2.  **Independencias de los errores**: Los residuos no están correlacionados entre sí.
+3.  \*\*Homocedasticidad}: La varianza de los residuos es constante en todos los niveles de las independientes.
+4.  **Normalidad de los errores**: Los residuos siguen una distribución normal.
+5.  Tamaño de muestra sea mucho mayor al numero de variables independientes.
+6.  **No multicolinealidad**: Las variables explicativas no están altamente correlacionadas entre sí.
+
+```{r,echo=FALSE,include=FALSE}
+# Instalar el paquete si es necesario
+# install.packages("readxl")
+
+library(readxl)
+
+# Cargar el archivo Excel
+
+data <- read_excel("C:/Users/Hp/Downloads/Proyecto__Regresion/Archivos/BD_CAlimenticios (2).xlsx")
+# Mostrar los primeros registros
+head(data)
+```
+
+## Diccionario de Variables
+
+Se utiliza una base de datos que recoge información sobre los componentes nutricionales de diversas preparaciones alimenticias peruanas. La base de datos contiene una muestra de 942 observaciones y 21 variables continuas.
+
+```{r,echo=FALSE}
+# Instalar el paquete si es necesario
+# install.packages("readxl")
+
+library(readxl)
+
+# Cargar el archivo Excel
+
+diccionario_variables <- read_excel("C:/Users/Hp/Downloads/Proyecto__Regresion/Archivos/Diccionario_Variables.xlsx")
+
+library(tibble)
+
+# Convertir a tibble y mostrar
+diccionario_variables <- as_tibble(diccionario_variables)
+print(diccionario_variables, n = Inf)  # Muestra todas las filas
+```
+
+## Exploracion Inicial de Datos
+
+### Analisis de la variable independiente cualitativa
+
+Se plantea agregar una variable categorica con niveles "Entradas y ensaladas", "Sopas" y "Platos principales", estas categorizan a las prepaciones peruanas.
+
+```{r,echo=FALSE}
+table(data$Categoria)  # Conteo de categorías
+barplot(table(data$Categoria), col = "#FA8072")
+```
+
+El gráfico muestra la frecuencia de preparaciones alimenticias por categoría. Se observa que los platos principales son la categoría más representada, seguidos por las sopas, mientras que las entradas y ensaladas tienen la menor frecuencia.
+
+### Analisis de la variables cuantitativa
+
+#### Correlacion para las variables
+
+La matriz de correlación muestra una relación positiva significativa entre variables como proteínas (PROCNT), grasas (FAT), y carbohidratos (CHOCDF) con el contenido energético (ENERC), lo que es coherente con su aporte calórico en preparaciones alimenticias. Además, se observan correlaciones fuertes entre algunas variables independientes, lo que sugiere posibles problemas de multicolinealidad que podrían influir en el modelo de regresión. Por otro lado, algunas variables como ciertos micronutrientes parecen tener poca o ninguna correlación con ENERC, indicando que su influencia podría ser limitada en este contexto.
+
+```{r, message=FALSE,echo=FALSE}
+library(ggcorrplot)
+
+# Calcular la matriz de correlación
+matriz_correlacion <- cor(data[1:21],method = "pearson")
+
+# Invertir el orden de las filas y columnas
+matriz_correlacion_invertida_x <- matriz_correlacion[, ncol(matriz_correlacion):1]
+
+# Graficar la matriz de correlación
+ggcorrplot(matriz_correlacion_invertida_x, 
+           lab = FALSE,        # Mostrar los valores en el gráfico     
+           method = "square", # Mostrar celdas cuadradas
+           colors = c("blue", "white", "red"), # Colores del gradiente
+           title = "Matriz de Correlación",   # Título del gráfico
+           hc.order = FALSE,   # Reordenar las variables jerárquicamente
+           outline.color = "black",
+           tl.cex = 8,        # Ajusta el tamaño de las etiquetas
+           tl.srt = 90)        # Rotación vertical de las etiquetas
+```
+
+## Ajuste del modelo de regresión lineal múltiple inicial
+
+El modelo ajustado inicial se incluyeron todas las variables cuantitativas como posibles predictores del contenido energético (ENERC) de las preparaciones alimenticias. El modolo incial permite obtener una visión inicial del impacto de cada predictor en la variable dependiente. Sin embargo, dado el alto número de variables incluidas, es posible que algunas no sean significativas o que exista multicolinealidad, lo que podría afectar la estabilidad y la interpretabilidad del modelo. Por lo tanto, este ajuste inicial sirve como punto de partida para realizar análisis adicionales, como la selección de variables y la evaluación de supuestos, que refinen el modelo hacia uno más parsimonioso y representativo.
+
+```{r,echo=FALSE}
+modelo_inicial <- lm(ENERC ~ ., data[1:21])
+
+# Resumen del modelo
+summary(modelo_inicial)
+```
+
+```{r, echo=FALSE,message=FALSE}
+library(caret)
+set.seed(123)
+ctrl <- trainControl(method = "LOOCV") # Leave-One-Out Cross-Validation
+modelo <- train(ENERC ~ ., data = data[1:21], method = "lm", trControl = ctrl)
+print(paste("El R2 predictivo es igual a:",modelo$results$Rsquared))
+```
+
+Con base en los resultados, donde tanto el R2 ajustado (0.998) como el R2 predictivo (0.9972) son extremadamente altos, se puede concluir que el modelo inicial tiene un excelente ajuste y una gran capacidad predictiva. Esto indica que las variables incluidas explican casi toda la variabilidad del contenido energético (ENERC) y que el modelo generaliza bien en datos no observados.
+
+### Analisis de Residuos para modelo inicial
+
+#### Supuesto de homocedasticidad
+
+La gráfica de residuos estandarizados frente a los valores ajustados permite evaluar el cumplimiento del supuesto de homocedasticidad en el modelo de regresión lineal múltiple. En este caso, los residuos parecen estar distribuidos de manera aleatoria alrededor de la línea horizontal (cero) sin mostrar un patrón claro o sistemático, lo cual sugiere que el supuesto de varianza constante de los errores se cumple razonablemente bien.
+
+Sin embargo, se observa una ligera dispersión más amplia en los valores ajustados más grandes, lo que podría indicar una posible heterocedasticidad en esos puntos extremos. Si bien esto no parece ser un problema crítico, podría ser útil realizar pruebas estadísticas, como la prueba de White, para confirmar la homocedasticidad.
+
+```{r,echo=FALSE}
+# Gráficos de diagnóstico (residuos, homocedasticidad, normalidad, etc.)
+#par(mfrow = c(2, 2))
+#plot(modelo_inicial)
+
+#Valores ajustados
+valores_ajustados <- fitted(modelo_inicial)
+
+# Residuos estandarizados
+residuos_estandarizados <- rstandard(modelo_inicial)
+
+# Graficar residuos estandarizados
+plot(valores_ajustados, residuos_estandarizados, 
+     main = "Residuos estandarizados vs Valores ajustados",
+     xlab = "Valores ajustados", 
+     ylab = "Residuos estandarizados",
+     col = "#FA8072",pch=1,cex = 1)
+abline(h = 0, col = "red", lty = 2)
+```
+
+Realizando la Prueba white:
+
+Dado que el p-valor es mayor a 0.05 (p\>0.05), no se rechaza la hipótesis nula de homocedasticidad. Esto sugiere que no hay evidencia estadísticamente significativa para afirmar que el modelo presenta heterocedasticidad.
+
+```{r,echo=FALSE}
+
+# Obtener los residuos estandarizados
+residuos <- residuals(modelo_inicial)^2
+
+# Crear las variables explicativas (valores ajustados y su cuadrado)
+fitted_vals <- fitted(modelo_inicial)
+aux_model <- lm(residuos ~ fitted_vals + I(fitted_vals^2))
+
+# Calcular el estadístico de White
+n <- nrow(data[1:21])
+R2 <- summary(aux_model)$r.squared
+white_stat <- n * R2
+p =length(data[2:21])
+
+# p-valor de la prueba (basado en distribución chi-cuadrado con p-1 grados de libertad)
+p_value <- 1 - pchisq(white_stat, df = p-1)
+
+# Mostrar los resultados
+cat("Estadístico de White:", white_stat, "\n")
+cat("p-valor:", p_value, "\n")
+
+```
+
+#### Supuesto de Normalidad
+
+El gráfico Q-Q de los residuos sugiere que el supuesto de normalidad se cumple razonablemente bien, ya que la mayoría de los puntos siguen la línea diagonal. No obstante, se observan ligeras desviaciones en las colas, lo que podría indicar la presencia de valores atípicos que podrían ser analizados con mayor detalle para evaluar su impacto en el modelo
+
+```{r,echo=FALSE}
+# QQ plot para los residuos
+qqnorm(rstandard(modelo_inicial), 
+       main = "QQ Plot de los Residuos", 
+       ylab = "Cuantiles de los Residuos", 
+       xlab = "Cuantiles Teóricos")
+qqline(resid(modelo_inicial), col = "red", lwd = 2)  # Línea de referencia
+```
+
+Realizando la prueba de normalidad: Dado que el p-valor es menor a 0.05 (p\<0.05), se rechaza la hipótesis nula de que los residuos siguen una distribución normal.
+
+```{r,echo=FALSE}
+# Obtener los residuos del modelo
+residuos <- residuals(modelo_inicial)
+
+# Prueba de normalidad Shapiro-Wilk
+shapiro.test(residuos)
+
+```
+
+#### Supuesto de Independencia
+
+La gráfica de residuos frente al índice de observación muestra que los residuos están distribuidos aleatoriamente alrededor de cero, sin patrones sistemáticos evidentes. Esto sugiere que el supuesto de independencia de los errores se cumple en el modelo, ya que no se observa autocorrelación o dependencia estructural relacionada con el orden de las observaciones.
+
+Para confirmar, se aplicara una prueba formal de autocorrelación, como la prueba de Durbin-Watson.
+
+```{r,message=FALSE,echo=FALSE}
+# Gráfico de residuos vs índice de observación
+plot(resid(modelo_inicial), 
+     type = "o", 
+     main = "Independencia de los Residuos", 
+     xlab = "Índice de Observación", 
+     ylab = "Residuos",col = "#2980b9",cex=0.5)
+abline(h = 0, col = "red", lty = 2)  # Línea de referencia en 0
+
+```
+
+Realizando la prueba Durbin-Watson
+
+Dado que el p-valor es muy pequeño (p\<0.05), rechazamos la hipótesis nula de que no existe autocorrelación en los residuos. Esto sugiere que hay autocorrelación positiva en los residuos, es decir, los residuos consecutivos están correlacionados.
+
+```{r,echo=FALSE,message=FALSE}
+# Prueba de Durbin-Watson
+#install.packages("lmtest")
+library(lmtest)
+dwtest(modelo_inicial)
+```
+
+#### Identificacion de Observaciones Atípicas
+En la gráfica de residuos estandarizados se observa que la mayoría de los residuos se encuentran dentro del rango de −3 a 3, lo que indica un comportamiento adecuado del modelo para la mayoría de las observaciones. Sin embargo, se identifican algunas observaciones fuera de este rango, que podrían considerarse atípicas, ya que se alejan significativamente de los valores esperados según el modelo ajustado.
+```{r,echo=FALSE}
+plot(rstandard(modelo_inicial), main = "Residuos Estandarizados")
+abline(h = c(-3, 3), col = "red")
+```
+
+Analizamos los residuos estandarizados, cuyos valores absolutos son mayores a 3 y obtenemos las siguientes i-esimas observaciones
+```{r,echo=FALSE}
+which(abs(rstandard(modelo_inicial)) > 3)
+
+#Quitando observaciones discordantes o atipicos  (>3 o <-3) 
+data <- data[-c(10, 104, 140, 143, 164, 166, 184, 488, 490, 530, 551, 554, 560, 586, 752, 761, 763, 906), ]
+```
+Con estos i-esimas observaciones, se procede a excluirlas de la data original 
+
+
+Y volvemos a plantear un modelo con todas la variables independientes cuantitativas pero con una data excluida de datos atipicos
+
+```{r,echo=FALSE}
+modelo_sin_outliers <- lm(ENERC ~ ., data = data[1:21])
+
+resumen_modelo_sin_outliers <- summary(modelo_sin_outliers)
+resumen_modelo_sin_outliers
+
+# Extraer el R² ajustado
+r2_ajustado_modelo_sin_outliers <- resumen_modelo_sin_outliers$adj.r.squared
+
+print(paste("El modelo con ",length(coef(modelo_sin_outliers))-1 ," variables independientes tiene un R2 ajustado:",r2_ajustado_modelo_sin_outliers))
+```
+
+Se visualiza que ante la exclusion de datos atipicos, el R2 ajustado (0.999231) mejora a comparacion del anterior (R2ajustado = 0.997218)
+
+```{r,echo=FALSE}
+# Obtener los residuos estandarizados
+residuos <- residuals(modelo_sin_outliers)^2
+
+# Crear las variables explicativas (valores ajustados y su cuadrado)
+fitted_vals <- fitted(modelo_sin_outliers)
+aux_model <- lm(residuos ~ fitted_vals + I(fitted_vals^2))
+
+# Calcular el estadístico de White
+n <- nrow(data[1:21])
+R2 <- summary(aux_model)$r.squared
+white_stat <- n * R2
+p =length(data[2:21])
+
+# p-valor de la prueba (basado en distribución chi-cuadrado con p-1 grados de libertad)
+p_value <- 1 - pchisq(white_stat, df = p-1)
+
+# Mostrar los resultados
+cat("Estadístico de White:", white_stat, "\n")
+cat("p-valor:", p_value, "\n")
+```
+
+```{r,echo=FALSE}
+# Obtener los residuos del modelo
+residuos <- residuals(modelo_sin_outliers)
+
+# Prueba de normalidad Shapiro-Wilk
+shapiro.test(residuos)
+
+```
+
+```{r,echo=FALSE,message=FALSE}
+# Prueba de Durbin-Watson
+#install.packages("lmtest")
+library(lmtest)
+dwtest(modelo_sin_outliers)
+```
+
+#### Evaluar multicolinealidad
+El análisis de multicolinealidad, realizado a través del Factor de Inflación de la Varianza (VIF), identificó que algunas variables presentan valores elevados de VIF, indicando una posible correlación alta entre ellas. En particular, las variables PROCNT (Proteínas), CHOCDF (Carbohidratos), CHOAVL (Carbohidratos disponibles) y ZN (Zinc) tienen un VIF mayor a 5, lo que sugiere problemas significativos de multicolinealidad según el criterio adoptado.
+```{r,message=FALSE,echo=FALSE}
+library(car)
+
+#vif(modelo_inicial)  # Factor de inflación de la varianza
+```
+
+```{r,echo=FALSE}
+alias(modelo_sin_outliers)
+
+```
+
+Problema significativo VIF \>5 o 10
+
+```{r,message=FALSE,echo=FALSE}
+library(olsrr)
+# Analiza el modelo con VIF y tolerancia
+ols_vif_tol(modelo_sin_outliers)  #VIF>5 , Tolerance<0.20 
+
+
+```
+La multicolinealidad implica que estas variables están altamente correlacionadas con otras en el modelo, por ello se procedio a identificar aquellas variables con alto VIF: PROCNT, CHOCDF, CHOAVL, ZN
+
+Despues de identifcar las variables con alto VIF, se analiza las correlaciones con las demás variables (Criterio de Correlacion \>= 0.60)
+
+-   **Correlacion de PROCNT y las demas variables**
+
+```{r,echo=FALSE}
+# Selecciona la variable objetivo
+variable_objetivo <- "PROCNT"
+# Calcula la correlación de la variable objetivo con las demás
+correlaciones <- sapply(data[1:21], function(var) {
+    round(cor(data[[variable_objetivo]],var,method = "pearson"),2)
+})
+# Ordenar las correlaciones de mayor a menor
+correlaciones_ordenadas <- sort(abs(correlaciones), decreasing = TRUE, na.last = TRUE)
+# Mostrar las correlaciones
+print(correlaciones_ordenadas)      
+```
+
+Alto correlacion de PROCNT con variables independientes: ZN, FE, NIA
+
+Correlacion con la variable dependiente: Alta
+
+
+-   **Correlacion de CHOCDF y las demas variables**
+
+```{r,echo=FALSE}
+# WATER, PROCNT, CHOCDF, CHOAVL,FIBTG P, ZN, FE, CARTBQ, THIA, NIA, VITC, 
+variable_objetivo <- "CHOCDF"
+# Calcula la correlación de la variable objetivo con las demás
+correlaciones <- sapply(data[1:21], function(var) {
+    round(cor(data[[variable_objetivo]],var,method = "pearson"),2)
+})
+# Ordenar las correlaciones de mayor a menor
+correlaciones_ordenadas <- sort(abs(correlaciones), decreasing = TRUE, na.last = TRUE)
+# Mostrar las correlaciones
+print(correlaciones_ordenadas)    
+```
+
+Alto correlacion de CHOCDF con variables independientes: CHOAVL, ZN
+
+Correlacion con la variable dependiente: Alta
+
+
+-   **Correlacion de CHOAVL y las demas variables**
+
+```{r,echo=FALSE}
+variable_objetivo <- "CHOAVL"
+# Calcula la correlación de la variable objetivo con las demás
+correlaciones <- sapply(data[1:21], function(var) {
+    round(cor(data[[variable_objetivo]],var,method = "pearson"),2)
+})
+# Ordenar las correlaciones de mayor a menor
+correlaciones_ordenadas <- sort(abs(correlaciones), decreasing = TRUE, na.last = TRUE)
+# Mostrar las correlaciones
+print(correlaciones_ordenadas)    
+```
+
+Alto correlacion de CHOAVL con variables independientes: CHOCDF
+
+Correlacion con la variable dependiente: Baja
+
+
+-   **Correlacion de ZN y las demas variables**
+
+```{r, echo=FALSE}
+# Selecciona la variable objetivo
+variable_objetivo <- "ZN"
+# Calcula la correlación de la variable objetivo con las demás
+correlaciones <- sapply(data[1:21], function(var) {
+    round(cor(data[[variable_objetivo]],var,method = "pearson"),2)
+})
+# Ordenar las correlaciones de mayor a menor
+correlaciones_ordenadas <- sort(abs(correlaciones), decreasing = TRUE, na.last = TRUE)
+# Mostrar las correlaciones
+print(correlaciones_ordenadas)      
+```
+
+Alto correlacion de ZN con variables independientes: PROCNT, FE, CHOCDF
+
+Correlacion con la variable dependiente: Alta
+
+
+
+Como resultado, se tomó la decisión de eliminar aquellas variables que presentan redundancia y menor aporte al modelo con base en los criterios de correlación y VIF. Las acciones específicas fueron las siguientes:
+
+-   Eliminación de CHOAVL: Esta variable mostró una correlación baja con la variable dependiente (ENERC) y presentó alta colinealidad con CHOCDF (Carbohidratos). Por lo tanto, se consideró redundante y se eliminó del modelo
+-   Eliminación de ZN (Zinc): La variable ZN presentó una alta correlación con PROCNT (Proteínas). Debido a que PROCNT tiene un mayor impacto en el modelo (mayor correlación con ENERC), se eliminó ZN.
+-   Eliminación de NIA (Niacina): La variable NIA mostró una alta correlación con PROCNT, lo que generaba redundancia. Dado que PROCNT es más relevante para explicar la variabilidad de ENERC, se decidió eliminar NIA.
+
+-----Variables a eliminar: CHOAVL, ZN, NIA
+
+Una vez eliminadas aquellas variables, procedo a plantear un modelo con las demas variables independientes, y vuelvo analizar el VIF que no supere mayor a 5
+```{r,echo=FALSE}
+# Eliminar las columnas especificadas
+data <- data[, !colnames(data) %in% c("CHOAVL", "ZN", "NIA")]
+
+modelo2 <- lm(ENERC ~ ., data[1:18])
+
+ols_vif_tol(modelo2)
+```
+Visualmente se observa que cumplen con VIF menor a 5; procedo a mostrar el modelo con las variables independientes restantes.
+```{r,echo=FALSE}
+# Resumen del modelo
+resumen2 <- summary(modelo2)
+resumen2
+
+# Extraer el R² ajustado
+r2_ajustado_modelo2 <- resumen2$adj.r.squared
+print(paste("El modelo con ",length(coef(modelo2))-1 ," variables independientes tiene un R2 ajustado:",r2_ajustado_modelo2))
+```
+
+#### Modelo resultante
+
+Hubo una reduccion de variables independientes despues de analizar la multicolinealidad entre variables, el modelo resultante es uno con las siguientes variables independientes cuantitativas:
+
+```{r,echo=FALSE}
+print(labels(terms(modelo2)))
+```
+
+## Metodos de Seleccion de Variables
+
+### Metodo del mejor subconjunto
+El método del mejor subconjunto se utilizó para seleccionar las variables más relevantes en la explicación del contenido energético (ENERC) de los alimentos. 
+```{r,message=FALSE,echo=FALSE, include=FALSE}
+if (!require("leaps")) install.packages("leaps")
+library(leaps)
+
+variables_seleccionadas <- setdiff(colnames(data),c("ENERC", "Categoria"))
+# Crear fórmula dinámicamente
+formula <- as.formula(paste("ENERC ~", paste(variables_seleccionadas, collapse = " + ")))
+
+mejores_modelos <- regsubsets( formula, data[1:18], nvmax = length(colnames(data[1:18])) - 1)
+
+
+# Resumen del modelo
+resumen <- summary(mejores_modelos)
+resumen
+```
+
+```{r,echo=FALSE}
+# Identificar el modelo con el mayor R^2 ajustado
+mejor_modelo <- which.max(resumen$adjr2)  # Índice del mejor modelo
+variables_seleccionadas <- resumen$which[mejor_modelo, ]  # Variables seleccionadas en el mejor modelo
+
+# Mostrar el mejor modelo y sus variables seleccionadas
+cat("El mejor modelo tiene un R^2 ajustado de:", resumen$adjr2[mejor_modelo], "\n")
+cat("Variables seleccionadas:\n")
+print(names(variables_seleccionadas)[variables_seleccionadas])
+
+# Crear la fórmula del mejor modelo
+mejor_formula <- as.formula(paste("ENERC ~", paste(names(variables_seleccionadas)[variables_seleccionadas][-1], collapse = " + ")))
+
+# Ajustar el modelo con las variables seleccionadas
+modelo_mejor <- lm(mejor_formula, data = data)
+resumen_modelo_mejor <- summary(modelo_mejor)
+resumen_modelo_mejor
+
+r2_ajustado_modelo_mejor <- resumen_modelo_mejor$adj.r.squared
+print(paste("El modelo escogio por el mejor Subconjunto tiene ",length(coef(modelo_mejor))-1 ," variables independientes"))
+print(paste("y un R2 ajustado:",r2_ajustado_modelo_mejor))
+```
+
+### Metodo Backward
+El método backward se utilizó para seleccionar las variables más relevantes en la explicación del contenido energético (ENERC) de los alimentos. 
+```{r,echo=FALSE}
+# Instalar y cargar el paquete leaps
+if (!require("leaps")) install.packages("leaps")
+library(leaps)
+
+# Aplicar regsubsets con el método backward
+modelo_backward <- regsubsets(
+  ENERC ~ .,         # Fórmula completa
+  data = data[1:18],       # Conjunto de datos
+  method = "backward", # Método backward
+  nvmax = length(colnames(data[1:18])) - 1  # Máximo de variables seleccionadas
+)
+
+# Resumen del modelo
+resumen <- summary(modelo_backward)
+
+# Crear el modelo final basado en las variables seleccionadas
+variables_seleccionadas <- names(resumen$which[mejor_modelo, ][resumen$which[mejor_modelo, ] == TRUE])
+formula_final_back <- as.formula(paste("ENERC ~", paste(variables_seleccionadas[-1], collapse = " + ")))
+modelo_final_back <- lm(formula_final_back, data = data[1:18])
+
+# Resumen del modelo final
+resumen_final_back<-summary(modelo_final_back)
+resumen_final_back
+
+r2_ajustado_final_back <- resumen_final_back$adj.r.squared
+
+print(paste("El modelo escogido por el metodo Backward tiene ",length(coef(modelo_final_back))-1 ," variables independientes"))
+print(paste("y un R2 ajustado:",r2_ajustado_final_back))
+```
+
+### Metodo Forward
+El método forward se utilizó para seleccionar las variables más relevantes en la explicación del contenido energético (ENERC) de los alimentos. 
+```{r,echo=FALSE}
+# Instalar y cargar el paquete leaps
+if (!require("leaps")) install.packages("leaps")
+library(leaps)
+
+# Aplicar regsubsets con el método backward
+modelo_forward <- regsubsets(
+  ENERC ~ .,         # Fórmula completa
+  data = data[1:18],       # Conjunto de datos
+  method = "forward", # Método backward
+  nvmax = length(colnames(data[1:18])) - 1  # Máximo de variables seleccionadas
+)
+
+# Resumen del modelo
+resumen <- summary(modelo_forward)
+
+# Crear el modelo final basado en las variables seleccionadas
+variables_seleccionadas <- names(resumen$which[mejor_modelo, ][resumen$which[mejor_modelo, ] == TRUE])
+formula_final_for <- as.formula(paste("ENERC ~", paste(variables_seleccionadas[-1], collapse = " + ")))
+modelo_final_for <- lm(formula_final_for, data = data[1:18])
+
+# Resumen del modelo final
+resumen_final_for<-summary(modelo_final_for)
+resumen_final_for
+
+r2_ajustado_final_for <- resumen_final_for$adj.r.squared
+
+print(paste("El modelo escogido por el metodo Forward tiene ",length(coef(modelo_final_for))-1 ," variables independientes "))
+print(paste("y un R2 ajustado:",r2_ajustado_final_for))
+```
+
+## Evaluacion del modelo final
+
+Tenemos como modelos resultantes:
+
+1.  Metodo del mejor subconjunto:
+
+```{r,echo=FALSE}
+print(paste("R2 ajustado:",r2_ajustado_modelo_mejor))
+```
+
+2.  Metodo Backward
+
+```{r,echo=FALSE}
+print(paste("R2 ajustado:",r2_ajustado_final_back))
+```
+
+3.  Metodo Forward
+
+```{r,echo=FALSE}
+print(paste("un R2 ajustado:",r2_ajustado_final_for))
+```
+
+En estos 3 metodos obtenemos un modelo con 14 variables independientes, todas ellas iguales para cada uno de los modelos; y incluso observando la significancia de las variables, se observa que la variable VITA, THIA , RIBF son menos significantes.
+
+Se hizo la prueba quitando estas variables y se obtiene un modelo con
+
+```{r,echo=FALSE}
+modelo_B <- lm(ENERC~WATER+PROCNT+FAT+CHOCDF+FIBTG+ASH+CA+P+FE+CARTBQ+K,data = data[1:18])
+resumenB <- summary(modelo_B)
+
+print(paste("un R2 ajustado:",resumenB$adj.r.squared))
+```
+
+Aunque estas variable individualmente parece poco significativa (su p-valor es alto), puede estar contribuyendo al modelo de forma conjunta con otras variables. Esto significa que su exclusión afecta la capacidad del modelo para explicar la variabilidad de la variable dependiente, por lo que se elige con estas variables independientes correspondientes al modelo final.
+
+```{r,echo=FALSE}
+
+alias(modelo_mejor)
+```
+
+A un inicio hubieron 19 variables independientes cuantitativas y al final nos quedamos solo con 14 variables, asi optimizando la parsimonia y representatividad del modelo.
+
+Visualizacion de los coeficientes parametrales del modelo final
+
+```{r,echo=FALSE}
+coef(modelo_mejor)
+```
+
+## Conclusion
+
+De los coeficientes parametrales podemos podemos responder los objetivos como:
+
+-   FAT (Grasas): Tiene un coeficiente alto (8.8226), lo que indica que un aumento en el contenido de grasa incrementa significativamente el valor energético.
+-   PROCNT (Proteínas) y CHOCDF (Carbohidratos) también tienen coeficientes positivos importantes (4.5967 y 4.0482, respectivamente), reflejando su aporte calorico o energetico.
+-   RIBF (Riboflavina): Tiene un coeficiente negativo significativo (-2.9317), aunque su impacto calórico directo es menor en comparación con macronutrientes como grasa o carbohidratos.
+-   El coeficiente de WATER es negativo (-0.0625), lo que confirma una relación inversa: los alimentos con mayor contenido de agua tienden a tener menos calorías. Esto es consistente con el hecho de que el agua no aporta calorías y diluye otros componentes energéticos.
+
+Por lo tanto, grasas, proteínas y carbohidratos son los principales factores que aumentan el valor energético, mientras que agua y algunos micronutrientes (como riboflavina) lo disminuyen.
